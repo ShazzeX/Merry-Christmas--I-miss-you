@@ -2,7 +2,6 @@ import sys
 import pygame
 import tkinter as tk
 import ctypes
-import math
 import random
 from PIL import Image, ImageTk, ImageEnhance
 
@@ -20,7 +19,7 @@ lyrics = [
     ("And you know I am too?", 4.7),
     ("And I get the chance to say", 3.4),
     ("\"Merry Christmas, I miss you\"", 6),
-    ("I miss you", 23)
+    ("I miss you", 8)
 ]
 
 
@@ -128,8 +127,24 @@ class MusicApp:
 
         else: 
             self.canvas.delete("lyric_text")
-            self.canvas.create_text(WINDOW_WIDTH // 2, WINDOW_HEIGHT - 300, text="Merry Christmas, I miss you - Alex Crichton", fill=LYRIC_COLOR, font=LYRIC_FONT)
-            pygame.mixer.music.stop()
+            self.outro_title(frame=0, fading_in=True)
+
+
+    def outro_title(self, frame=0, fading_in=True):
+
+        current_color = FADE_COLORS[frame]
+
+        self.canvas.create_text(
+            WINDOW_WIDTH // 2,
+            WINDOW_HEIGHT - 300,
+            text="Merry Christmas, I miss you - Alex Crichton",
+            fill=current_color, 
+            font=LYRIC_FONT,
+            justify="center"
+        )
+
+        if frame < len(FADE_COLORS) - 1:
+            self.root.after(40, lambda: self.outro_title(frame + 1, fading_in))
 
     
     def falling_snow(self):
