@@ -28,7 +28,7 @@ FADE_COLORS = ["#0b132b", "#1c2844", "#3d5277", "#6881ad", "#9db2d8", "#cdd8ed",
 
 GLITTER_COLORS = ["#ffffff", "#edf2f4", "#d8f3dc", "#caf0f8", "#fefae0"]
 
-MAX_GLITTER = 30
+MAX_GLITTER = 40
 
 
 class MusicApp:
