@@ -129,23 +129,6 @@ class MusicApp:
             self.canvas.delete("lyric_text")
             self.outro_title(frame=0, fading_in=True)
 
-
-    def outro_title(self, frame=0, fading_in=True):
-
-        current_color = FADE_COLORS[frame]
-
-        self.canvas.create_text(
-            WINDOW_WIDTH // 2,
-            WINDOW_HEIGHT - 300,
-            text="Merry Christmas, I miss you - Alex Crichton",
-            fill=current_color, 
-            font=LYRIC_FONT,
-            justify="center"
-        )
-
-        if frame < len(FADE_COLORS) - 1:
-            self.root.after(40, lambda: self.outro_title(frame + 1, fading_in))
-
     
     def falling_snow(self):
         
@@ -181,6 +164,23 @@ class MusicApp:
             )
 
         self.root.after(20, self.falling_snow)
+
+
+    def outro_title(self, frame=0, fading_in=True):
+
+        current_color = FADE_COLORS[frame]
+
+        self.canvas.create_text(
+            WINDOW_WIDTH // 2,
+            WINDOW_HEIGHT - 300,
+            text="Merry Christmas, I miss you - Alex Crichton",
+            fill=current_color, 
+            font=LYRIC_FONT,
+            justify="center"
+        )
+
+        if frame < len(FADE_COLORS) - 1:
+            self.root.after(40, lambda: self.outro_title(frame + 1, fading_in))
 
 
     def dark_title_bar(self):
