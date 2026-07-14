@@ -2,6 +2,8 @@ import sys
 import pygame
 import tkinter as tk
 import ctypes
+import math
+import random
 from PIL import Image, ImageTk, ImageEnhance
 
 WINDOW_WIDTH = 1200
@@ -24,6 +26,10 @@ lyrics = [
 
 FADE_COLORS = ["#0b132b", "#1c2844", "#3d5277", "#6881ad", "#9db2d8", "#cdd8ed", "#ffffff"]
 
+GLITTER_COLORS = ["#ffffff", "#edf2f4", "#d8f3dc", "#caf0f8", "#fefae0"]
+
+MAX_GLITTER = 30
+
 
 class MusicApp:
             
@@ -35,6 +41,7 @@ class MusicApp:
         self.root.resizable(False, False)
 
         self.current_lyric_index = 0
+        self.snowflake = []
         
         self.canvas = tk.Canvas(root, width=WINDOW_WIDTH, height=WINDOW_HEIGHT, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
@@ -61,6 +68,8 @@ class MusicApp:
 
         #self.musicplayer()
         #self.lyricspop()
+
+        self.falling_snow()
 
         self.root.after(500, self.musicplayer(), self.lyricspop())
 
@@ -122,12 +131,51 @@ class MusicApp:
             self.canvas.create_text(WINDOW_WIDTH // 2, WINDOW_HEIGHT - 300, text="Merry Christmas, I miss you - Alex Crichton", fill=LYRIC_COLOR, font=LYRIC_FONT)
             pygame.mixer.music.stop()
 
+    
+    def falling_snow(self):
+        
+        self.canvas.delete("snow")
+
+        if len(self.snowflake) < MAX_GLITTER and random.random() < 0.4:
+
+            self.snowflake.append({
+                "x": random.randint(0, WINDOW_WIDTH),
+                "y": 0,
+                "radius": random.uniform(1.5, 3.0),
+                "speed": random.uniform(1.5, 4.0),
+                "color": random.choice(GLITTER_COLORS)
+            })
+
+        for flake in self.snowflake[:]:
+
+            flake["y"] += flake ["speed"]
+
+            current_x = flake["x"]
+            r = flake["radius"]
+
+            if flake["y"] > WINDOW_HEIGHT:
+                self.snowflake.remove(flake)
+                continue
+
+            self.canvas.create_oval(
+            current_x - r, flake["y"] - r,
+            current_x + r, flake["y"] + r,
+            fill=flake["color"],
+            outline="",
+            tags="snow"
+            )
+
+        self.root.after(20, self.falling_snow)
+
 
     def dark_title_bar(self):
+
         window.update()
+
         DWMWA_USE_IMMERSIVE_DARK_MODE = 20
         set_window_attribute = ctypes.windll.dwmapi.DwmSetWindowAttribute
         get_parent = ctypes.windll.user32.GetParent
+
         hwnd = get_parent(window.winfo_id())
         rendering_policy = ctypes.c_int(2)
         
