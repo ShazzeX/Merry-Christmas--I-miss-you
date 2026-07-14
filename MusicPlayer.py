@@ -39,13 +39,13 @@ class MusicApp:
         self.canvas = tk.Canvas(root, width=WINDOW_WIDTH, height=WINDOW_HEIGHT, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
-        icon_image = Image.open("snowflakelogo.png")
+        icon_image = Image.open("Assets/snowflakelogo.png")
 
         self.window_logo = ImageTk.PhotoImage(icon_image)
 
         self.root.iconphoto(False, self.window_logo)
 
-        bg_image = Image.open("christmas_snoopy.jpg")
+        bg_image = Image.open("Assets/christmas_snoopy.jpg")
         bg_image = bg_image.resize((WINDOW_WIDTH, WINDOW_HEIGHT), Image.Resampling.LANCZOS)
 
         dimmer = ImageEnhance.Brightness(bg_image)
@@ -69,7 +69,7 @@ class MusicApp:
     
         try: 
             pygame.mixer.init()
-            pygame.mixer.music.load("Merry_Christmas,_i_miss_you.mp3")
+            pygame.mixer.music.load("Assets/Merry_Christmas,_i_miss_you.mp3")
             pygame.mixer.music.play(0, 185.2)
         
         except pygame.error as e:
