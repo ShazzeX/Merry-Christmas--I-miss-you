@@ -27,7 +27,7 @@ FADE_COLORS = ["#0b132b", "#1c2844", "#3d5277", "#6881ad", "#9db2d8", "#cdd8ed",
 
 GLITTER_COLORS = ["#ffffff", "#edf2f4", "#d8f3dc", "#caf0f8", "#fefae0"]
 
-MAX_GLITTER = 40
+MAX_GLITTER = 45
 
 
 class MusicApp:
@@ -70,7 +70,7 @@ class MusicApp:
 
         self.falling_snow()
 
-        self.root.after(500, self.musicplayer(), self.lyricspop())
+        self.root.after(500, self.musicplayer(), self.lyrics_pop())
 
 
     def musicplayer(self):
@@ -107,7 +107,7 @@ class MusicApp:
             self.root.after(40, lambda: self.lyrics_fade(text, frame + 1, fading_in))
 
 
-    def lyricspop(self):
+    def lyrics_pop(self):
 
         if self.current_lyric_index < len(lyrics):
             self.canvas.delete("lyric_text")
@@ -123,7 +123,7 @@ class MusicApp:
 
             self.current_lyric_index += 1
 
-            self.root.after(delay, self.lyricspop)
+            self.root.after(delay, self.lyrics_pop)
 
         else: 
             self.canvas.delete("lyric_text")
@@ -141,12 +141,15 @@ class MusicApp:
                 "y": 0,
                 "radius": random.uniform(1.5, 3.0),
                 "speed": random.uniform(1.5, 4.0),
+                "sway": random.uniform(-1.5, 1.5),
                 "color": random.choice(GLITTER_COLORS)
             })
 
         for flake in self.snowflake[:]:
 
             flake["y"] += flake ["speed"]
+
+            flake["x"] += flake ["sway"]
 
             current_x = flake["x"]
             r = flake["radius"]
