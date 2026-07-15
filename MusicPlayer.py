@@ -40,7 +40,7 @@ class MusicApp:
         self.root.resizable(False, False)
 
         self.current_lyric_index = 0
-        self.snowflake = []
+        self.snow = []
         
         self.canvas = tk.Canvas(root, width=WINDOW_WIDTH, height=WINDOW_HEIGHT, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
@@ -134,9 +134,9 @@ class MusicApp:
         
         self.canvas.delete("snow")
 
-        if len(self.snowflake) < MAX_GLITTER and random.random() < 0.4:
+        if len(self.snow) < MAX_GLITTER and random.random() < 0.4:
 
-            self.snowflake.append({
+            self.snow.append({
                 "x": random.randint(0, WINDOW_WIDTH),
                 "y": 0,
                 "radius": random.uniform(1.5, 3.0),
@@ -145,23 +145,23 @@ class MusicApp:
                 "color": random.choice(GLITTER_COLORS)
             })
 
-        for flake in self.snowflake[:]:
+        for glitter in self.snow[:]:
 
-            flake["y"] += flake ["speed"]
+            glitter["y"] += glitter ["speed"]
 
-            flake["x"] += flake ["sway"]
+            glitter["x"] += glitter ["sway"]
 
-            current_x = flake["x"]
-            r = flake["radius"]
+            current_x = glitter["x"]
+            r = glitter["radius"]
 
-            if flake["y"] > WINDOW_HEIGHT:
-                self.snowflake.remove(flake)
+            if glitter["y"] > WINDOW_HEIGHT:
+                self.snow.remove(glitter)
                 continue
 
             self.canvas.create_oval(
-            current_x - r, flake["y"] - r,
-            current_x + r, flake["y"] + r,
-            fill=flake["color"],
+            current_x - r, glitter["y"] - r,
+            current_x + r, glitter["y"] + r,
+            fill=glitter["color"],
             outline="",
             tags="snow"
             )
