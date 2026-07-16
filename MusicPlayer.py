@@ -190,8 +190,6 @@ class MusicApp:
 
                 self.current_lyric_index += 1
 
-                #self.canvas.delete("lyric_text")
-
                 self.root.after(delay, self.lyrics_pop)
 
 
@@ -211,8 +209,6 @@ class MusicApp:
 
                 self.current_lyric_index += 1
 
-                #self.canvas.delete("lyric_text")
-
                 self.root.after(delay, self.lyrics_pop)
 
 
@@ -228,8 +224,6 @@ class MusicApp:
                 self.root.after(fade_out_delay, lambda: self.lyrics_fade(text, frame=0, fading_in=False))
 
                 self.current_lyric_index += 1
-
-                #self.canvas.delete("lyric_text")
 
                 self.root.after(delay, self.lyrics_pop)
 
@@ -247,15 +241,7 @@ class MusicApp:
 
                 self.current_lyric_index += 1
 
-                #self.canvas.delete("lyric_text")
-
                 self.root.after(delay, self.lyrics_pop)
-
-        #else: 
-        #    self.canvas.delete("lyric_text")
-        #    self.outro_title(frame=0, fading_in=True)
-
-        #    self.root.after(1000, self.lyrics_pop)
 
     
     def falling_snow(self):
