@@ -37,6 +37,12 @@ verse_2 = [
     ("Now whеn I look back, I can see I was wrong", 6.9)
 ]
 
+bridge = [
+    ("You know it\'s true", 6.0),
+    ("Yeah, I miss you", 6.0),
+    ("You know it\'s true", 6.0)
+]
+
 
 FADE_COLORS = ["#0b132b", "#1c2844", "#3d5277", "#6881ad", "#9db2d8", "#cdd8ed", "#ffffff"]
 
@@ -111,27 +117,33 @@ class MusicApp:
     def count_validation(self):
 
         if self.time_elapsed >= 0:
+
             print(f"[VALIDATION] Time: {self.time_elapsed}s")
+
             self.time_elapsed += 1
 
             self.root.after(1000, self.count_validation)
 
         if self.time_elapsed == first_verse_Time:
+
             self.current_lyric_index = 0
             self.index_validation = len(verse_1)
             self.lyrics_pop()
         
         if self.time_elapsed == chorus_Time:
+
             self.current_lyric_index = 0
             self.index_validation = len(chorus)
             self.lyrics_pop()
 
         if self.time_elapsed == second_verse_Time:
+
             self.current_lyric_index = 0
             self.index_validation = len(verse_2)
             self.root.after(600, self.lyrics_pop)
 
         if self.time_elapsed == second_chorus_Time:
+            
             self.current_lyric_index = 1
             self.index_validation = len(chorus)
             self.lyrics_pop()
@@ -263,11 +275,11 @@ class MusicApp:
 
         for glitter in self.snow[:]:
 
+            glitter["x"] += glitter ["sway"]
             glitter["y"] += glitter ["speed"]
 
-            glitter["x"] += glitter ["sway"]
-
             current_x = glitter["x"]
+            current_y = glitter["y"]
             r = glitter["radius"]
 
             if glitter["y"] > WINDOW_HEIGHT:
@@ -275,8 +287,8 @@ class MusicApp:
                 continue
 
             self.canvas.create_oval(
-            current_x - r, glitter["y"] - r,
-            current_x + r, glitter["y"] + r,
+            current_x - r, current_y - r,
+            current_x + r, current_y + r,
             fill=glitter["color"],
             outline="",
             tags="snow"
