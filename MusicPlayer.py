@@ -13,28 +13,28 @@ WATERMARK = ("Helvetica", 12, "italic")
 
 verse_1 = [
     ("You walked in the party, your coat was untied", 9.0),
-    ("Slammin\' the door \'cause it\'s colder outside", 8.0),
+    ("Slammin\' the door \'cause it\'s colder outside", 8.5),
     ("And I won\'t forget that moment like the blink of an eye", 10.0),
-    ("You\'re off to the beach now \'til the weather gets nice", 7.0)
+    ("You\'re off to the beach now \'til the weather gets nice", 6.5)
 ]
 
 chorus = [
     ("But what if I call", 5.0),
-    ("So, what if I call", 5.2),
+    ("So, what if I call", 4.6),
     ("And you pick up the phone?", 4.7), 
     ("And I use this holiday to makе my way to your ghost", 9),
     ("Oh, what if you're lonely", 4.5),
     ("And you know I am too?", 4.7),
-    ("And I get the chance to say", 3.4),
+    ("And I get the chance to say", 3.3),
     ("\"Merry Christmas, I miss you\"", 6),
-    ("I miss you", 8)
+    ("I miss you", 5)
 ]
 
 verse_2 = [
-    ("So I\'ll hang the lights up, you\'ll see them from space", 10.0)
-    ("And all that I want on my list is that look on your face", 9.0)
-    ("When I said, \"November's early to be playin' these songs\"", 10.0)
-    ("Now whеn I look back, I can see I was wrong", 7.0)
+    ("So I\'ll hang the lights up, you\'ll see them from space", 9.0),
+    ("And all that I want on my list is that look on your face", 8.5),
+    ("When I said, \"November's early to be playin' these songs\"", 10.0),
+    ("Now whеn I look back, I can see I was wrong", 6.9)
 ]
 
 
@@ -46,8 +46,8 @@ MAX_GLITTER = 45
 
 first_verse_Time = 20
 chorus_Time = 54
-second_verse_Time = 96
-second_chorus_Time = 130
+second_verse_Time = 97
+second_chorus_Time = 132
 bridge_Time = 172
 last_chorus_Time = 185
 
@@ -118,12 +118,24 @@ class MusicApp:
 
         if self.time_elapsed == first_verse_Time:
             self.current_lyric_index = 0
-            self.lyrics_pop()
             self.index_validation = len(verse_1)
+            self.lyrics_pop()
         
         if self.time_elapsed == chorus_Time:
             self.current_lyric_index = 0
+            self.index_validation = len(chorus)
             self.lyrics_pop()
+
+        if self.time_elapsed == second_verse_Time:
+            self.current_lyric_index = 0
+            self.index_validation = len(verse_2)
+            self.root.after(600, self.lyrics_pop)
+
+        if self.time_elapsed == second_chorus_Time:
+            self.current_lyric_index = 1
+            self.index_validation = len(chorus)
+            self.lyrics_pop()
+
 
     
     def lyrics_fade(self, text, frame=0, fading_in=True):
@@ -149,13 +161,11 @@ class MusicApp:
 
     def lyrics_pop(self):
 
-        if self.current_lyric_index >= 0:
+        self.canvas.delete("lyric_text")
 
-            self.canvas.delete("lyric_text")
+        if self.current_lyric_index < self.index_validation:
 
             if first_verse_Time <= self.time_elapsed < chorus_Time:
-
-                self.canvas.delete("lyric_text")
 
                 text, duration = verse_1[self.current_lyric_index]
 
@@ -168,11 +178,12 @@ class MusicApp:
 
                 self.current_lyric_index += 1
 
+                #self.canvas.delete("lyric_text")
+
                 self.root.after(delay, self.lyrics_pop)
 
-            if chorus_Time <= self.time_elapsed < second_verse_Time:
 
-                self.canvas.delete("lyric_text")
+            if chorus_Time <= self.time_elapsed < second_verse_Time:
 
                 text, duration = chorus[self.current_lyric_index]
 
@@ -187,6 +198,44 @@ class MusicApp:
                 self.root.after(fade_out_delay, lambda: self.lyrics_fade(text, frame=0, fading_in=False))
 
                 self.current_lyric_index += 1
+
+                #self.canvas.delete("lyric_text")
+
+                self.root.after(delay, self.lyrics_pop)
+
+
+            if second_verse_Time <= self.time_elapsed < second_chorus_Time:
+
+                text, duration = verse_2[self.current_lyric_index]
+
+                delay = int(duration * 1000)
+
+                self.lyrics_fade(text, frame=0, fading_in=True)
+
+                fade_out_delay = max(100, delay - 280)
+                self.root.after(fade_out_delay, lambda: self.lyrics_fade(text, frame=0, fading_in=False))
+
+                self.current_lyric_index += 1
+
+                #self.canvas.delete("lyric_text")
+
+                self.root.after(delay, self.lyrics_pop)
+
+
+            if second_chorus_Time <= self.time_elapsed < bridge_Time:
+
+                text, duration = chorus[self.current_lyric_index]
+
+                delay = int(duration * 1000)
+
+                self.lyrics_fade(text, frame=0, fading_in=True)
+
+                fade_out_delay = max(100, delay - 280)
+                self.root.after(fade_out_delay, lambda: self.lyrics_fade(text, frame=0, fading_in=False))
+
+                self.current_lyric_index += 1
+
+                #self.canvas.delete("lyric_text")
 
                 self.root.after(delay, self.lyrics_pop)
 
@@ -208,7 +257,7 @@ class MusicApp:
                 "y": 0,
                 "radius": random.uniform(1.5, 3.0),
                 "speed": random.uniform(1.5, 4.0),
-                "sway": random.uniform(-1.5, 1.5),
+                "sway": random.uniform(-1.2, 1.2),
                 "color": random.choice(GLITTER_COLORS)
             })
 
