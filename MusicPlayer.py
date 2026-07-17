@@ -12,8 +12,8 @@ LYRIC_FONT = ("Helvetica", 20, "bold")
 WATERMARK = ("Helvetica", 12, "italic")
 
 verse_1 = [
-    ("You walked in the party, your coat was untied", 9.0),
-    ("Slammin\' the door \'cause it\'s colder outside", 8.5),
+    ("You walked in the party, your coat was untied", 9.2),
+    ("Slammin\' the door \'cause it\'s colder outside", 8.3),
     ("And I won\'t forget that moment like the blink of an eye", 10.0),
     ("You\'re off to the beach now \'til the weather gets nice", 6.5)
 ]
@@ -22,25 +22,25 @@ chorus = [
     ("But what if I call", 5.0),
     ("So, what if I call", 4.6),
     ("And you pick up the phone?", 4.7), 
-    ("And I use this holiday to makе my way to your ghost", 9),
+    ("And I use this holiday to makе my way to your ghost", 9.0),
     ("Oh, what if you're lonely", 4.5),
     ("And you know I am too?", 4.7),
     ("And I get the chance to say", 3.3),
-    ("\"Merry Christmas, I miss you\"", 6),
-    ("I miss you", 5)
+    ("\"Merry Christmas, I miss you\"", 6.0),
+    ("I miss you", 5.0)
 ]
 
 verse_2 = [
-    ("So I\'ll hang the lights up, you\'ll see them from space", 9.0),
-    ("And all that I want on my list is that look on your face", 8.5),
+    ("So I\'ll hang the lights up, you\'ll see them from space", 9.2),
+    ("And all that I want on my list is that look on your face", 8.3),
     ("When I said, \"November's early to be playin' these songs\"", 10.0),
     ("Now whеn I look back, I can see I was wrong", 6.9)
 ]
 
 bridge = [
-    ("You know it\'s true", 6.0),
-    ("Yeah, I miss you", 6.0),
-    ("You know it\'s true", 6.0)
+    ("You know it\'s true", 4.6, 200, 200),
+    ("Yeah, I miss you", 4.5, 800, 300),
+    ("You know it\'s true", 4.5, 400, 400)
 ]
 
 
@@ -54,7 +54,7 @@ first_verse_Time = 20
 chorus_Time = 54
 second_verse_Time = 97
 second_chorus_Time = 132
-bridge_Time = 172
+bridge_Time = 173
 last_chorus_Time = 185
 
 
@@ -143,9 +143,15 @@ class MusicApp:
             self.root.after(600, self.lyrics_pop)
 
         if self.time_elapsed == second_chorus_Time:
-            
+
             self.current_lyric_index = 1
             self.index_validation = len(chorus)
+            self.lyrics_pop()
+
+        if self.time_elapsed == bridge_Time:
+
+            self.current_lyric_index = 0
+            self. index_validation = len(bridge)
             self.lyrics_pop()
 
 
@@ -169,6 +175,27 @@ class MusicApp:
 
         if frame < len(FADE_COLORS) - 1:
             self.root.after(40, lambda: self.lyrics_fade(text, frame + 1, fading_in))
+
+
+    def bridge_fade(self, text, width, height, frame=0, fading_in=True):
+
+        if fading_in:
+            current_color = FADE_COLORS[frame]
+
+        else:
+            current_color = list(reversed(FADE_COLORS))[frame]
+
+        self.canvas.create_text(
+        width, height,
+        text=text,
+        fill=current_color,
+        font=LYRIC_FONT,
+        tags="lyric_text",
+        justify="center"
+        )
+
+        if frame < len(FADE_COLORS) - 1:
+            self.root.after(40, lambda: self.bridge_fade(text, width, height, frame + 1, fading_in))
 
 
     def lyrics_pop(self):
@@ -232,12 +259,31 @@ class MusicApp:
 
                 text, duration = chorus[self.current_lyric_index]
 
+                if self.current_lyric_index == 8:
+                    duration -= 0.8
+
                 delay = int(duration * 1000)
 
                 self.lyrics_fade(text, frame=0, fading_in=True)
 
                 fade_out_delay = max(100, delay - 280)
                 self.root.after(fade_out_delay, lambda: self.lyrics_fade(text, frame=0, fading_in=False))
+
+                self.current_lyric_index += 1
+
+                self.root.after(delay, self.lyrics_pop)
+
+
+            if bridge_Time <= self.time_elapsed < last_chorus_Time:
+
+                text, duration, width, height = bridge[self.current_lyric_index]
+
+                delay = int(duration * 1000)
+
+                self.bridge_fade(text, width, height, frame=0, fading_in=True)
+
+                fade_out_delay = max(100, delay - 280)
+                self.root.after(fade_out_delay, lambda: self.bridge_fade(text, width, height, frame=0, fading_in=False))
 
                 self.current_lyric_index += 1
 
