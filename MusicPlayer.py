@@ -38,9 +38,9 @@ verse_2 = [
 ]
 
 bridge = [
-    ("You know it\'s true", 4.6, 200, 200),
-    ("Yeah, I miss you", 4.5, 800, 300),
-    ("You know it\'s true", 4.5, 400, 400)
+    ("You know it\'s true", 4.6, random.randint(200, 1000), random.randint(110, 230)),
+    ("Yeah, I miss you", 4.5, random.randint(200, 1000), random.randint(240, 360)),
+    ("You know it\'s true", 4.5, random.randint(200, 1000), random.randint(370, 490))
 ]
 
 
@@ -55,7 +55,7 @@ chorus_Time = 54
 second_verse_Time = 97
 second_chorus_Time = 132
 bridge_Time = 173
-last_chorus_Time = 185
+last_chorus_Time = 186
 
 
 class MusicApp:
@@ -151,9 +151,14 @@ class MusicApp:
         if self.time_elapsed == bridge_Time:
 
             self.current_lyric_index = 0
-            self. index_validation = len(bridge)
-            self.lyrics_pop()
+            self.index_validation = len(bridge)
+            self.bridge_pop()
 
+        if self.time_elapsed == last_chorus_Time:
+
+            self.current_lyric_index = 1
+            self.index_validation = len(chorus)
+            self.root.after(700, self.lyrics_pop)
 
     
     def lyrics_fade(self, text, frame=0, fading_in=True):
@@ -274,6 +279,31 @@ class MusicApp:
                 self.root.after(delay, self.lyrics_pop)
 
 
+            if last_chorus_Time <= self.time_elapsed :
+
+                text, duration = chorus[self.current_lyric_index]
+
+                if self.current_lyric_index == 0:
+                    self.current_lyric_index += 1
+
+                delay = int(duration * 1000)
+
+                self.lyrics_fade(text, frame=0, fading_in=True)
+
+                fade_out_delay = max(100, delay - 280)
+                self.root.after(fade_out_delay, lambda: self.lyrics_fade(text, frame=0, fading_in=False))
+
+                self.current_lyric_index += 1
+
+                self.root.after(delay, self.lyrics_pop)
+
+            
+    def bridge_pop(self):
+
+        self.canvas.delete("lyric_text")
+
+        if self.current_lyric_index < self.index_validation:
+
             if bridge_Time <= self.time_elapsed < last_chorus_Time:
 
                 text, duration, width, height = bridge[self.current_lyric_index]
@@ -287,7 +317,7 @@ class MusicApp:
 
                 self.current_lyric_index += 1
 
-                self.root.after(delay, self.lyrics_pop)
+                self.root.after(delay, self.bridge_pop)
 
     
     def falling_snow(self):
