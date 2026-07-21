@@ -92,17 +92,64 @@ class MusicApp:
 
         self.dark_title_bar()
 
-        self.musicplayer()
-
         self.falling_snow()
+
+        pygame.mixer.init()
+        pygame.mixer.music.load("Assets/Merry_Christmas,_i_miss_you.mp3")
+
+        self.buttonfade(frame=0, fading_in=True)
+
+
+    def create_rounded_rectangle(self, x1, y1, x2, y2, radius=15, **kwargs):
+        points = [
+            x1 + radius, y1, x1 + radius, y1, x2 - radius, y1, x2 - radius, y1, x2, y1,
+            x2, y1 + radius, x2, y1 + radius, x2, y2 - radius, x2, y2 - radius, x2, y2,
+            x2 - radius, y2, x2 - radius, y2, x1 + radius, y2, x1 + radius, y2, x1, y2,
+            x1, y2 - radius, x1, y2 - radius, x1, y1 + radius, x1, y1 + radius, x1, y1
+        ]
+        return self.canvas.create_polygon(points, smooth=True, **kwargs)
+
+
+    def buttonfade(self, frame=0, fading_in=True):
+
+        if fading_in:
+            current_color = FADE_COLORS[frame]
+
+        else:
+            current_color = list(reversed(FADE_COLORS))[frame]
+
+        self.play_btn_bg = self.create_rounded_rectangle(
+            WINDOW_WIDTH // 2 - 80, WINDOW_HEIGHT // 2 - 25,
+            WINDOW_WIDTH // 2 + 80, WINDOW_HEIGHT // 2 + 25,
+            radius=35, fill="", outline=current_color, width=2, tags="play_btn"
+        )
+
+        self.play_btn_text = self.canvas.create_text(
+            WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2,
+            text="PLAY", fill=current_color, font=("Helvetica", 16, "bold"), tags="play_btn"
+        )
+
+        self.canvas.tag_bind("play_btn", "<Button-1>", lambda e: self.playbutton())
+
+        if frame < len(FADE_COLORS) - 1:
+            self.root.after(40, lambda: self.buttonfade(frame + 1, fading_in))
+
+        if frame == len(FADE_COLORS) - 1:
+            if fading_in == False:
+                self.canvas.delete("play_btn")
+
+
+    def playbutton(self):
+
+        self.buttonfade(frame=0, fading_in=False)
+
+        self.musicplayer()
 
 
     def musicplayer(self):
     
         try: 
-            pygame.mixer.init()
-            pygame.mixer.music.load("Assets/Merry_Christmas,_i_miss_you.mp3")
-            pygame.mixer.music.play(0)
+            pygame.mixer.music.play()
 
             self.time_elapsed = 0
 
