@@ -213,18 +213,6 @@ class MusicApp:
 
                 text, duration = verse_1[self.current_lyric_index]
 
-                delay = int(duration * 1000)
-
-                self.lyrics_fade(text, frame=0, fading_in=True)
-
-                fade_out_delay = max(100, delay - 280)
-                self.root.after(fade_out_delay, lambda: self.lyrics_fade(text, frame=0, fading_in=False))
-
-                self.current_lyric_index += 1
-
-                self.root.after(delay, self.lyrics_pop)
-
-
             if chorus_Time <= self.time_elapsed < second_verse_Time:
 
                 text, duration = chorus[self.current_lyric_index]
@@ -232,33 +220,9 @@ class MusicApp:
                 if self.current_lyric_index == 0:
                     self.current_lyric_index += 1
 
-                delay = int(duration * 1000)
-
-                self.lyrics_fade(text, frame=0, fading_in=True)
-
-                fade_out_delay = max(100, delay - 280)
-                self.root.after(fade_out_delay, lambda: self.lyrics_fade(text, frame=0, fading_in=False))
-
-                self.current_lyric_index += 1
-
-                self.root.after(delay, self.lyrics_pop)
-
-
             if second_verse_Time <= self.time_elapsed < second_chorus_Time:
 
                 text, duration = verse_2[self.current_lyric_index]
-
-                delay = int(duration * 1000)
-
-                self.lyrics_fade(text, frame=0, fading_in=True)
-
-                fade_out_delay = max(100, delay - 280)
-                self.root.after(fade_out_delay, lambda: self.lyrics_fade(text, frame=0, fading_in=False))
-
-                self.current_lyric_index += 1
-
-                self.root.after(delay, self.lyrics_pop)
-
 
             if second_chorus_Time <= self.time_elapsed < bridge_Time:
 
@@ -267,18 +231,6 @@ class MusicApp:
                 if self.current_lyric_index == 8:
                     duration -= 0.8
 
-                delay = int(duration * 1000)
-
-                self.lyrics_fade(text, frame=0, fading_in=True)
-
-                fade_out_delay = max(100, delay - 280)
-                self.root.after(fade_out_delay, lambda: self.lyrics_fade(text, frame=0, fading_in=False))
-
-                self.current_lyric_index += 1
-
-                self.root.after(delay, self.lyrics_pop)
-
-
             if last_chorus_Time <= self.time_elapsed :
 
                 text, duration = chorus[self.current_lyric_index]
@@ -286,16 +238,16 @@ class MusicApp:
                 if self.current_lyric_index == 0:
                     self.current_lyric_index += 1
 
-                delay = int(duration * 1000)
+            delay = int(duration * 1000)
 
-                self.lyrics_fade(text, frame=0, fading_in=True)
+            self.lyrics_fade(text, frame=0, fading_in=True)
 
-                fade_out_delay = max(100, delay - 280)
-                self.root.after(fade_out_delay, lambda: self.lyrics_fade(text, frame=0, fading_in=False))
+            fade_out_delay = max(100, delay - 280)
+            self.root.after(fade_out_delay, lambda: self.lyrics_fade(text, frame=0, fading_in=False))
 
-                self.current_lyric_index += 1
+            self.current_lyric_index += 1
 
-                self.root.after(delay, self.lyrics_pop)
+            self.root.after(delay, self.lyrics_pop)
 
             
     def bridge_pop(self):
