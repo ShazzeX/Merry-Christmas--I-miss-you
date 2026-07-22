@@ -56,6 +56,7 @@ second_verse_Time = 97
 second_chorus_Time = 132
 bridge_Time = 173
 last_chorus_Time = 186
+outro_title_time = 232
 
 
 class MusicApp:
@@ -143,7 +144,7 @@ class MusicApp:
 
         self.buttonfade(frame=0, fading_in=False)
 
-        self.musicplayer()
+        self.root.after(500, self.musicplayer)
 
 
     def musicplayer(self):
@@ -154,6 +155,8 @@ class MusicApp:
             self.time_elapsed = 0
 
             self.count_validation()
+
+            self.title_fade(frame=0, fading_in=True)
         
         except pygame.error as e:
             print(f"\n[CRITICAL ERROR] Pygame failed because: {e}")
@@ -165,11 +168,17 @@ class MusicApp:
 
         if self.time_elapsed >= 0:
 
-            print(f"[VALIDATION] Time: {self.time_elapsed}s")
+            sys.stdout.write(f"\r\033[KTime: {self.time_elapsed}")
+
+            sys.stdout.flush()
 
             self.time_elapsed += 1
 
             self.root.after(1000, self.count_validation)
+
+        if self.time_elapsed == first_verse_Time - 2:
+
+            self.title_fade(frame=0, fading_in=False)
 
         if self.time_elapsed == first_verse_Time:
 
@@ -205,7 +214,36 @@ class MusicApp:
 
             self.current_lyric_index = 1
             self.index_validation = len(chorus)
-            self.root.after(700, self.lyrics_pop)
+            self.root.after(600, self.lyrics_pop)
+
+        if self.time_elapsed == outro_title_time:
+
+            self.title_fade(frame=0, fading_in=True)
+
+
+    def title_fade(self, frame, fading_in=True):
+
+        if fading_in:
+            current_color = FADE_COLORS[frame]
+
+        else:
+            current_color = list(reversed(FADE_COLORS))[frame]
+
+        self.canvas.create_text(
+        WINDOW_WIDTH // 2, WINDOW_HEIGHT - 300,
+        text="Merry Christmas, I miss you - Alex Crichton",
+        fill=current_color,
+        font=LYRIC_FONT,
+        tags="title_text",
+        justify="center"
+        )
+
+        if frame < len(FADE_COLORS) - 1:
+            self.root.after(40, lambda: self.title_fade(frame + 1, fading_in))
+
+        if frame == len(FADE_COLORS) - 1:
+            if fading_in == False:
+                self.canvas.delete("title_text")
 
     
     def lyrics_fade(self, text, frame=0, fading_in=True):
@@ -228,6 +266,10 @@ class MusicApp:
         if frame < len(FADE_COLORS) - 1:
             self.root.after(40, lambda: self.lyrics_fade(text, frame + 1, fading_in))
 
+        if frame == len(FADE_COLORS) - 1:
+            if fading_in == False:
+                self.canvas.delete("lyric_text")
+
 
     def bridge_fade(self, text, width, height, frame=0, fading_in=True):
 
@@ -249,10 +291,12 @@ class MusicApp:
         if frame < len(FADE_COLORS) - 1:
             self.root.after(40, lambda: self.bridge_fade(text, width, height, frame + 1, fading_in))
 
+        if frame == len(FADE_COLORS) - 1:
+            if fading_in == False:
+                self.canvas.delete("lyric_text")
+
 
     def lyrics_pop(self):
-
-        self.canvas.delete("lyric_text")
 
         if self.current_lyric_index < self.index_validation:
 
@@ -282,8 +326,11 @@ class MusicApp:
 
                 text, duration = chorus[self.current_lyric_index]
 
-                if self.current_lyric_index == 0:
-                    self.current_lyric_index += 1
+                if self.current_lyric_index == 1:
+                    duration += .10
+
+                if self.current_lyric_index == 8:
+                    duration += 2.0
 
             delay = int(duration * 1000)
 
@@ -298,8 +345,6 @@ class MusicApp:
 
             
     def bridge_pop(self):
-
-        self.canvas.delete("lyric_text")
 
         if self.current_lyric_index < self.index_validation:
 
@@ -329,8 +374,8 @@ class MusicApp:
                 "x": random.randint(0, WINDOW_WIDTH),
                 "y": 0,
                 "radius": random.uniform(1.5, 3.0),
-                "speed": random.uniform(1.5, 4.0),
-                "sway": random.uniform(-1.2, 1.2),
+                "speed": random.uniform(0.5, 1.5),
+                "sway": random.uniform(-0.5, 0.5),
                 "color": random.choice(GLITTER_COLORS)
             })
 
@@ -355,7 +400,7 @@ class MusicApp:
             tags="snow"
             )
 
-        self.root.after(20, self.falling_snow)
+        self.root.after(10, self.falling_snow)
 
 
     def outro_title(self, frame=0, fading_in=True):
